@@ -10,7 +10,6 @@ const subreddit = args[2];
 
 if (!subreddit || subreddit.startsWith("-")) {
   logErr("Invalid or no subreddit name provided");
-  process.exit(1);
 }
 
 if (["?", "help", "man", "woman"].includes(subreddit)) {
@@ -112,6 +111,9 @@ function logErr(err) {
   if (typeof err === "string") console.log(chalk.red(err));
 
   console.log(chalk.red(err.message));
+
+  // Exit on error
+  process.exit(1);
 }
 
 // Generate random number from the provided range
