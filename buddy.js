@@ -12,7 +12,7 @@ if (!subreddit || subreddit.startsWith("-")) {
   logErr("Invalid or no subreddit name provided");
 }
 
-if (["?", "help", "man", "woman"].includes(subreddit)) {
+if (["help"].includes(subreddit)) {
   console.log(`
 
     ${chalk.green("usage:")}
