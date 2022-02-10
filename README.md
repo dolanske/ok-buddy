@@ -10,16 +10,25 @@ If you want to give it a try:
 
 ### Usage
 
-This is my second ever command line application. Trust me I've no idea what's going on. Not sure how to properly set up commands on so on.
-
 ```shell
-$ ./buddy.js <subreddit name>
+  ./buddy.js <subreddit>
+
+  parameters:
+
+  -hot            random post in hot category
+  -new            random post in new category
+  -top [options]  random post in top category
+                  options: hour, day, week, month, year, all
+                  default: hot
+  -simple         use simple character matching
+
+
 ```
 
 Example:
 
 ```shell
-$ ./buddy.js pics
+$ ./buddy.js pics -hot
 ```
 
 Outputs
@@ -72,5 +81,3 @@ t////////////t/twdbhOpmL0mmOjrCLUO//cztjxCdpucY{vXtc([JJwbdc|xr}jLUZQwbbwJjjxvXL
 ### Planned features
 
 - [ ] Option to simple paste in URL which then gets converted
-- [ ] Option to specify category (--hot, --new, --top [today, week, month, year, all] )
-- [ ] Option to choose from normal and simplified character matching scale (--simple)

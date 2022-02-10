@@ -7,10 +7,90 @@ const { createCanvas, Image } = canvas;
 
 const args = process.argv;
 const subreddit = args[2];
-const shouldUseSimple = args[3] === true ? true : false;
+
+if (["?", "help", "man", "woman"].includes(subreddit)) {
+  console.log(`
+
+    ${chalk.green("usage:")}
+
+      ./buddy.js <subreddit>
+
+      parameters:
+
+      ${chalk.blue("-hot")}            random post in hot category
+      ${chalk.blue("-new")}            random post in new category
+      ${chalk.blue("-top")} [options]  random post in top category
+                      ${chalk.yellow("options:")} hour, day, week, month, year, all
+                      ${chalk.yellow("default:")} hot
+      ${chalk.blue("-simple")}         use simple character matching
+
+  `);
+
+  process.exit(1);
+}
+
+const adllowedFlagValues = ["hour", "day", "week", "month", "year", "all"];
+const allowedFlagParams = ["-new", "-hot", "-top"];
+
+const formatArguments = (data) => {
+  let flagParam = null;
+  let flagValue = null;
+  let useSimple = false;
+
+  // Iterate over each parameter and format it
+  data.map((parameter, index) => {
+    if (allowedFlagParams.includes(parameter)) flagParam = parameter;
+    if (adllowedFlagValues.includes(parameter)) flagValue = parameter;
+
+    if (parameter === "-simple") useSimple = true;
+  });
+
+  return {
+    flagParam,
+    flagValue,
+    useSimple,
+  };
+};
+
+const { flagParam, flagValue, useSimple } = formatArguments(args.slice(3));
+
+const flag = (returnParam) => {
+  const parameter = flagParam;
+  const value = flagValue;
+
+  const format = (cat, time = null) => {
+    switch (returnParam) {
+      case "cat": {
+        return cat;
+      }
+      case "time": {
+        return time ? `?t=${time}` : "";
+      }
+    }
+  };
+
+  // Default to hot if incorrect or non allowed parameter is used
+  if (!parameter || !allowedFlagParams.includes(parameter)) return format("hot");
+
+  switch (parameter) {
+    case "-new": {
+      return format("new");
+    }
+    case "-top": {
+      if (value && adllowedFlagValues.includes(value)) {
+        return format("top", value);
+      }
+
+      return format("top", "day");
+    }
+    case "-hot": {
+      return format("hot");
+    }
+  }
+};
 
 axios
-  .get(`https://www.reddit.com/r/${subreddit}/hot/.json`)
+  .get(`https://www.reddit.com/r/${subreddit}/${flag("cat")}/.json${flag("time")}`)
   .then((response) => {
     // Some cleaning up
     let res = response.data;
@@ -97,7 +177,9 @@ async function convertImageToASCII(data) {
 }
 
 // Grayscale character, most visible at 0, least at the end
-const map = shouldUseSimple ? " .:-=+*#%@" : "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+const map_simple = " .:-=+*#%@";
+const map_large = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+const map = useSimple ? map_simple : map_large;
 
 // Assigns character based on the pixel's grayscale value (0,255)
 const mapLookup = (imageData) => map[Math.ceil(((map.length - 1) * imageData) / 255)];
