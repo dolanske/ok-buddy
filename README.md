@@ -68,3 +68,9 @@ ttttttttttttfttj?zUqkdbkmQ0mqQd*bddYjfff|[(j()cmqO{Xwqwf|XJOmbh0OYrxmw0CULqQOkbk
 t////////////t/twdbhOpmL0mmOjrCLUO//cztjxCdpucY{vXtc([JJwbdc|xr}jLUZQwbbwJjjxvXLLCmOQQ0OZmwmCLOmwXza
 
 ```
+
+### Planned features
+
+- [ ] Option to simple paste in URL which then gets converted
+- [ ] Option to specify category (--hot, --new, --top [today, week, month, year, all] )
+- [ ] Option to choose from normal and simplified character matching scale (--simple)

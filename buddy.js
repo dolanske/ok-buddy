@@ -7,9 +7,10 @@ const { createCanvas, Image } = canvas;
 
 const args = process.argv;
 const subreddit = args[2];
+const shouldUseSimple = args[3] === true ? true : false;
 
 axios
-  .get(`https://www.reddit.com/r/${subreddit}/.json`)
+  .get(`https://www.reddit.com/r/${subreddit}/hot/.json`)
   .then((response) => {
     // Some cleaning up
     let res = response.data;
@@ -96,8 +97,7 @@ async function convertImageToASCII(data) {
 }
 
 // Grayscale character, most visible at 0, least at the end
-const map = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
-const map_simple = " .:-=+*#%@";
+const map = shouldUseSimple ? " .:-=+*#%@" : "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
 
 // Assigns character based on the pixel's grayscale value (0,255)
 const mapLookup = (imageData) => map[Math.ceil(((map.length - 1) * imageData) / 255)];
