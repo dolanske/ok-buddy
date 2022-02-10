@@ -8,6 +8,11 @@ const { createCanvas, Image } = canvas;
 const args = process.argv;
 const subreddit = args[2];
 
+if (!subreddit || subreddit.startsWith("-")) {
+  logErr("Invalid or no subreddit name provided");
+  process.exit(1);
+}
+
 if (["?", "help", "man", "woman"].includes(subreddit)) {
   console.log(`
 
@@ -41,7 +46,6 @@ const formatArguments = (data) => {
   data.map((parameter, index) => {
     if (allowedFlagParams.includes(parameter)) flagParam = parameter;
     if (adllowedFlagValues.includes(parameter)) flagValue = parameter;
-
     if (parameter === "-simple") useSimple = true;
   });
 
@@ -58,15 +62,9 @@ const flag = (returnParam) => {
   const parameter = flagParam;
   const value = flagValue;
 
-  const format = (cat, time = null) => {
-    switch (returnParam) {
-      case "cat": {
-        return cat;
-      }
-      case "time": {
-        return time ? `?t=${time}` : "";
-      }
-    }
+  const format = (category, time = null) => {
+    if (returnParam === "category" || !returnParam) return category;
+    return time ? `?t=${time}` : "";
   };
 
   // Default to hot if incorrect or non allowed parameter is used
@@ -90,9 +88,9 @@ const flag = (returnParam) => {
 };
 
 axios
-  .get(`https://www.reddit.com/r/${subreddit}/${flag("cat")}/.json${flag("time")}`)
+  .get(`https://www.reddit.com/r/${subreddit}/${flag("category")}/.json${flag("time")}`)
   .then((response) => {
-    // Some cleaning up
+    // Some cleaning up in case something's missing or an error happened
     let res = response.data;
 
     if (!res) throw "Couldn't load posts from " + subreddit;
@@ -111,11 +109,9 @@ axios
 
 // A bit better formatting of errors
 function logErr(err) {
-  if (typeof err === "string") {
-    console.log(chalk.red(err));
-  } else {
-    console.log(chalk.red(err.message));
-  }
+  if (typeof err === "string") console.log(chalk.red(err));
+
+  console.log(chalk.red(err.message));
 }
 
 // Generate random number from the provided range
@@ -177,14 +173,15 @@ async function convertImageToASCII(data) {
 }
 
 // Grayscale character, most visible at 0, least at the end
-const map_simple = " .:-=+*#%@";
+const map_simple = "@%#*+=-:. ";
 const map_large = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
 const map = useSimple ? map_simple : map_large;
 
 // Assigns character based on the pixel's grayscale value (0,255)
 const mapLookup = (imageData) => map[Math.ceil(((map.length - 1) * imageData) / 255)];
 
-// Converts RGB input into grayscale (https://en.wikipedia.org/wiki/Grayscale#Colorimetric_(perceptual_luminance-preserving)_conversion_to_grayscale)
+// Converts RGB input into grayscale
+// https://en.wikipedia.org/wiki/Grayscale#Colorimetric_(perceptual_luminance-preserving)_conversion_to_grayscale
 const toGrayScale = (r, g, b) => 0.21 * r + 0.72 * g + 0.07 * b;
 
 const convertToGrayScales = (context, width, height) => {
