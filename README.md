@@ -1,6 +1,8 @@
 # Ok buddy
 
-Simple command line application which takes in a random new post from a subreddit of your choice, takes the posts image or thumbnail and converts it to ascii. Nothing else. Also **disclaimer**: Most if not all images will look like absolute crap. Enjoy!
+Simple command line application which takes in a random new post from a subreddit of your choice, takes the posts image or thumbnail and converts it to ascii. Nothing else.
+
+Also **disclaimer**: Most if not all images will look like absolute crap. Enjoy!
 
 ![Example Image](https://i.imgur.com/jIj9n2p.png)
 
