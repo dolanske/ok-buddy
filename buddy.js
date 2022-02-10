@@ -27,6 +27,7 @@ if (["help"].includes(subreddit)) {
                       ${chalk.yellow("options:")} hour, day, week, month, year, all
                       ${chalk.yellow("default:")} hot
       ${chalk.blue("-simple")}         use simple character matching
+      ${chalk.blue("-invert")}         inverts ascii character matching
 
   `);
 
@@ -40,22 +41,25 @@ const formatArguments = (data) => {
   let flagParam = null;
   let flagValue = null;
   let useSimple = false;
+  let invert = false;
 
   // Iterate over each parameter and assign it
   data.map((parameter, index) => {
     if (allowedFlagParams.includes(parameter)) flagParam = parameter;
     if (adllowedFlagValues.includes(parameter)) flagValue = parameter;
     if (parameter === "-simple") useSimple = true;
+    if (parameter === "-invert") useSimple = true;
   });
 
   return {
     flagParam,
     flagValue,
     useSimple,
+    invert,
   };
 };
 
-const { flagParam, flagValue, useSimple } = formatArguments(args.slice(3));
+const { flagParam, flagValue, useSimple, invert } = formatArguments(args.slice(3));
 
 const flag = (returnParam) => {
   const parameter = flagParam;
@@ -175,9 +179,20 @@ const convertImageToASCII = async (data) => {
 };
 
 // Grayscale character, most visible at 0, least at the end
-const map_simple = "@%#*+=-:. ";
-const map_large = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
-const map = useSimple ? map_simple : map_large;
+const map_simple = " .:-=+*#%@";
+const map_large = " .'`^\",:;Il!i><~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+const map_simple_invert = "@%#*+=-:. ";
+const map_large_invert = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+
+const chooseMap = () => {
+  if (invert) {
+    return useSimple ? map_simple_invert : map_large_invert;
+  }
+
+  return useSimple ? map_simple : map_large;
+};
+
+const map = chooseMap();
 
 // Assigns character based on the pixel's grayscale value (0,255)
 const mapLookup = (imageData) => map[Math.ceil(((map.length - 1) * imageData) / 255)];
