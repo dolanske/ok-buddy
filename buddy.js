@@ -107,23 +107,23 @@ axios
   .catch((e) => logErr(e));
 
 // A bit better formatting of errors
-function logErr(err) {
+const logErr = (err) => {
   if (typeof err === "string") console.log(chalk.red(err));
 
   console.log(chalk.red(err.message));
 
   // Exit on error
   process.exit(1);
-}
+};
 
 // Generate random number from the provided range
-function ranMinMax(min, max) {
+const ranMinMax = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 
-async function generatePost(data) {
+const generatePost = async (data) => {
   let post = "";
 
   // Subreddit name
@@ -139,9 +139,9 @@ async function generatePost(data) {
       console.log(post);
     })
     .catch((e) => logErr(e));
-}
+};
 
-async function convertImageToASCII(data) {
+const convertImageToASCII = async (data) => {
   return new Promise((resolve) => {
     // If post is a video, use its thumbnail
     let imageUrl = data.is_video ? data.thumbnail : data.url;
@@ -172,7 +172,7 @@ async function convertImageToASCII(data) {
 
     img.src = imageUrl;
   });
-}
+};
 
 // Grayscale character, most visible at 0, least at the end
 const map_simple = "@%#*+=-:. ";
