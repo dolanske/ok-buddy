@@ -37,7 +37,7 @@ const formatArguments = (data) => {
   let flagValue = null;
   let useSimple = false;
 
-  // Iterate over each parameter and format it
+  // Iterate over each parameter and assign it
   data.map((parameter, index) => {
     if (allowedFlagParams.includes(parameter)) flagParam = parameter;
     if (adllowedFlagValues.includes(parameter)) flagValue = parameter;
