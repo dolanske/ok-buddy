@@ -1,6 +1,6 @@
 {
   "name": "ok-buddy-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Returns a random new post from user input subreddit and converts it to ascii.",
   "main": "buddy.js",
   "type": "module",
