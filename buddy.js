@@ -184,7 +184,12 @@ const map_large = " .'`^\",:;Il!i><~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*
 const map_simple_invert = "@%#*+=-:. ";
 const map_large_invert = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
 
+//const map_square = "     .◻▤▥▧▦▩■";
+//const map_square_invert = "▩▦▧▤◻∙. ";
+
 const chooseMap = () => {
+  //return invert ? map_square : map_square_invert;
+
   if (invert) {
     return useSimple ? map_simple_invert : map_large_invert;
   }
